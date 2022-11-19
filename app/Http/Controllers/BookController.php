@@ -2,6 +2,7 @@
 
     namespace App\Http\Controllers;
 
+    use App\Models\Author;
     use App\Models\Book;
     use App\Http\Requests\StoreBookRequest;
     use App\Http\Requests\UpdateBookRequest;
@@ -24,7 +25,10 @@
          * @return \Illuminate\Http\Response
          */
         public function create() {
-            return view('books.create');
+            $book    = new Book();
+            $authors = Author::all();
+
+            return view('books.create', compact('book', 'authors'));
         }
 
         /**
@@ -36,10 +40,12 @@
          */
         public function store(StoreBookRequest $request) {
             $request->validate([
-                'name' => 'required',
+                'name'    => 'required',
+                'authors' => 'required|array|min:1|max:2',
             ]);
 
-            Book::create($request->all());
+            $book = Book::create($request->all());
+            $book->authors()->sync($request->authors);
 
             return redirect()->route('books.index')
                              ->with('success', 'Book successfully saved');
@@ -53,7 +59,7 @@
          * @return \Illuminate\Http\Response
          */
         public function show(Book $book) {
-            return view('books.show',compact('book'));
+            return view('books.show', compact('book'));
         }
 
         /**
@@ -64,7 +70,9 @@
          * @return \Illuminate\Http\Response
          */
         public function edit(Book $book) {
-            return view('books.edit',compact('book'));
+            $authors = Author::all();
+
+            return view('books.edit', compact('book', 'authors'));
         }
 
         /**
@@ -77,13 +85,15 @@
          */
         public function update(UpdateBookRequest $request, Book $book) {
             $request->validate([
-                'name' => 'required',
+                'name'    => 'required',
+                'authors' => 'required|array|min:1|max:2',
             ]);
 
             $book->update($request->all());
+            $book->authors()->sync($request->authors);
 
-            return redirect()->route('books.index')
-                             ->with('success','Book successfully updated');
+            return redirect()->route('books.show', $book->id)
+                             ->with('success', 'Book successfully updated');
         }
 
         /**
@@ -97,6 +107,6 @@
             $book->delete();
 
             return redirect()->route('books.index')
-                             ->with('success','Book successfully deleted');
+                             ->with('success', 'Book successfully deleted');
         }
     }
