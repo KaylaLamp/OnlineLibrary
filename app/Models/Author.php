@@ -18,13 +18,18 @@ class Author extends Model
     ];
 
     /**
-     * Get all the authors for the book.
+     * Get all the books for the author.
      */
     public function books()
     {
         return $this->belongsToMany(Book::class);
     }
 
+    /**
+     * Create full name attribute for easier display.
+     *
+     * @return string
+     */
     public function getFullNameAttribute()
     {
         return "{$this->first_name} {$this->last_name}";

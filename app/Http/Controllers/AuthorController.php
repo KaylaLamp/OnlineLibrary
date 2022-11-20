@@ -43,8 +43,8 @@ class AuthorController extends Controller
     public function store(StoreAuthorRequest $request)
     {
         $request->validate([
-            'first_name'    => 'required|string',
-            'last_name'     => 'required|string',
+            'first_name'    => 'required|string|max:50',
+            'last_name'     => 'required|string|max:50',
         ]);
 
         $author = Author::create($request->all());
@@ -87,8 +87,8 @@ class AuthorController extends Controller
     public function update(UpdateAuthorRequest $request, Author $author)
     {
         $request->validate([
-            'first_name'    => 'required|string',
-            'last_name'     => 'required|string',
+            'first_name'    => 'required|string|max:50',
+            'last_name'     => 'required|string|max:50',
         ]);
 
         $author->update($request->all());
