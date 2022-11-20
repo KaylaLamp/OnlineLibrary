@@ -43,7 +43,7 @@
                     return response()->json([
                         'status'  => true,
                         'message' => 'Author added successfully',
-                        'author_id' => $authorCreated->id
+                        'author' => fractal($authorCreated, new AuthorTransformer())
                     ]);
                 }
                 return response()->json([

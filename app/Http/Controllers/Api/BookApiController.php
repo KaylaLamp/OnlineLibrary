@@ -5,6 +5,7 @@ namespace App\Http\Controllers\API;
 use App\Http\Controllers\Controller;
 use App\Models\Author;
 use App\Models\Book;
+use App\Transformers\BookTransformer;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -29,12 +30,11 @@ class BookApiController extends Controller
             });
         });
 
-
         // If books exist, return them with a 200 success
         if ($books) {
             return response()->json([
                 'status' => true,
-                'books'  => $books->get()->toArray(),
+                'books'  => fractal($books->get(), new BookTransformer())->parseIncludes('authors'),
             ], 200);
         }
         // Return status false with 404 to say no books were found
