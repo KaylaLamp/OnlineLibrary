@@ -1,6 +1,6 @@
 # Library Online
 
-Basic Laravel app to display a books and authors management system.
+Basic Laravel app to display a book and author management system.
 
 ## Steps to set up
 
